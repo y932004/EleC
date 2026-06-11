@@ -1172,7 +1172,7 @@ body.modal-open{overflow:hidden;touch-action:none}
     <h3>加入群組</h3>
     <p>掃描下方 QR Code，回到大家的群組裡。<br>正式版時，你可以把真正的群組 QR Code 換進來。</p>
     <div class="qr-box">
-      <img id="qrImage" class="qr-canvas" src="assets/GroupQRcode.png" alt="群組 QR Code" width="212" height="212">
+      <img id="qrImage" class="qr-canvas" src="assets/GroupQRcode.webp" alt="群組 QR Code" width="212" height="212">
     </div>
     <div class="qr-note">掃描上方 QR Code 加入群組</div>
     <div class="qr-actions">
@@ -1228,16 +1228,16 @@ let introOpening=false;
 function createFlyingLetters(){
   // if photo set exists, fly photos; otherwise fall back to small notes
   const photoFiles = [
-    "3920c648-212f-4de3-9310-a40dca2c459a.png",
-    "a3e1c1ee-ab8e-46a0-9da4-a59629594efb.png",
-    "ChatGPT Image 2026年6月11日 下午11_41_26 (1).png",
-    "ChatGPT Image 2026年6月11日 下午11_41_27 (2).png",
-    "ChatGPT Image 2026年6月11日 下午11_41_27 (3).png",
-    "ChatGPT Image 2026年6月11日 下午11_41_27 (4).png",
-    "ChatGPT Image 2026年6月11日 下午11_41_27 (5).png",
-    "ChatGPT Image 2026年6月11日 下午11_41_28 (6).png",
-    "ChatGPT Image 2026年6月11日 下午11_41_28 (7).png",
-    "ChatGPT Image 2026年6月11日 下午11_41_28 (8).png"
+    "3920c648-212f-4de3-9310-a40dca2c459a.webp",
+    "a3e1c1ee-ab8e-46a0-9da4-a59629594efb.webp",
+    "ChatGPT Image 2026年6月11日 下午11_41_26 (1).webp",
+    "ChatGPT Image 2026年6月11日 下午11_41_27 (2).webp",
+    "ChatGPT Image 2026年6月11日 下午11_41_27 (3).webp",
+    "ChatGPT Image 2026年6月11日 下午11_41_27 (4).webp",
+    "ChatGPT Image 2026年6月11日 下午11_41_27 (5).webp",
+    "ChatGPT Image 2026年6月11日 下午11_41_28 (6).webp",
+    "ChatGPT Image 2026年6月11日 下午11_41_28 (7).webp",
+    "ChatGPT Image 2026年6月11日 下午11_41_28 (8).webp"
   ];
   const usePhotos = photoFiles && photoFiles.length;
   const count = usePhotos ? photoFiles.length : (innerWidth <= 760 ? 10 : 18);

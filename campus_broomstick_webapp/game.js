@@ -25,7 +25,7 @@
   const sceneDefs = [
     { name:"START GATE", src:"assets/scene-01-gate.webp", boxes:[] },
     { name:"RAINBOW SINKS", src:"assets/scene-02-rainbow-sinks.webp", boxes:[[520,352,290,220]] },
-    { name:"WHITE SLIDES", src:"assets/scene-03-white-slides.png", boxes:[[0,330,430,150],[850,330,430,150]] },
+    { name:"WHITE SLIDES", src:"assets/scene-03-white-slides.webp", boxes:[[0,330,430,150],[850,330,430,150]] },
     { name:"FOOTBALL FIELD", src:"assets/scene-04-football-field.webp", boxes:[[420,455,440,120]] },
     { name:"BASKETBALL COURT", src:"assets/scene-05-basketball.webp", boxes:[[120,230,175,330],[985,230,175,330]] },
     { name:"PLAYGROUND", src:"assets/scene-06-playground.webp", boxes:[[220,185,590,380],[850,330,330,240]] },
