@@ -1,4 +1,4 @@
-const CACHE = "campus-broomstick-chase-v9";
+const CACHE = "campus-broomstick-chase-v8";
 const FILES = [
   "./",
   "./index.html",
@@ -22,25 +22,10 @@ self.addEventListener("activate", (event) => {
   event.waitUntil(caches.keys().then((keys) => Promise.all(keys.filter((key) => key !== CACHE).map((key) => caches.delete(key)))).then(() => self.clients.claim()));
 });
 self.addEventListener("fetch", (event) => {
-  if (event.request.method !== "GET") return;
-  event.respondWith(
-    caches.match(event.request).then((cached) => {
-      if (cached) return cached;
-      return fetch(event.request).then((response) => {
-        // cache successful GET responses
-        try {
-          const clone = response.clone();
-          caches.open(CACHE).then((cache) => cache.put(event.request, clone));
-        } catch (e) { /* ignore caching failures */ }
-        return response;
-      }).catch(() => {
-        // Only navigation requests should fallback to the app shell HTML
-        if (event.request.mode === 'navigate') {
-          return caches.match('./index.html');
-        }
-        // For other resource types (images/CSS/JS), do not return HTML — return network error
-        return Response.error();
-      });
-    })
-  );
+  if(event.request.method !== "GET") return;
+  event.respondWith(caches.match(event.request).then((cached) => cached || fetch(event.request).then((response) => {
+    const clone = response.clone();
+    caches.open(CACHE).then((cache) => cache.put(event.request, clone));
+    return response;
+  }).catch(() => caches.match("./index.html"))));
 });

@@ -1,8 +1,6 @@
 (() => {
   "use strict";
 
-  // Support being embedded in another page: compute asset base URL
-  const GAME_BASE = new URL('./campus_broomstick_webapp/', document.baseURI).href;
   const canvas = document.getElementById("gameCanvas");
   const ctx = canvas.getContext("2d");
   const W = canvas.width;
@@ -27,7 +25,7 @@
   const sceneDefs = [
     { name:"START GATE", src:"assets/scene-01-gate.webp", boxes:[] },
     { name:"RAINBOW SINKS", src:"assets/scene-02-rainbow-sinks.webp", boxes:[[520,352,290,220]] },
-    { name:"WHITE SLIDES", src:"assets/scene-03-white-slides.webp", boxes:[[0,330,430,150],[850,330,430,150]] },
+    { name:"WHITE SLIDES", src:"assets/scene-03-white-slides.png", boxes:[[0,330,430,150],[850,330,430,150]] },
     { name:"FOOTBALL FIELD", src:"assets/scene-04-football-field.webp", boxes:[[420,455,440,120]] },
     { name:"BASKETBALL COURT", src:"assets/scene-05-basketball.webp", boxes:[[120,230,175,330],[985,230,175,330]] },
     { name:"PLAYGROUND", src:"assets/scene-06-playground.webp", boxes:[[220,185,590,380],[850,330,330,240]] },
@@ -38,7 +36,7 @@
 
   const images = sceneDefs.map((scene) => {
     const image = new Image();
-    image.src = new URL(scene.src, GAME_BASE).href;
+    image.src = scene.src;
     return image;
   });
 
@@ -510,6 +508,17 @@
   canvas.addEventListener("touchstart", canvasPress, { passive:false });
   canvas.addEventListener("touchend", clearCanvasTouch, { passive:false });
   canvas.addEventListener("touchcancel", clearCanvasTouch, { passive:false });
+
+  // Keep game clicks interactive while asking the host page to handle scrolling.
+  window.addEventListener("wheel", (event) => {
+    if(window.parent === window) return;
+    window.parent.postMessage({
+      type:"campus-game-wheel",
+      deltaY:event.deltaY,
+      deltaMode:event.deltaMode
+    },"*");
+    event.preventDefault();
+  }, { passive:false, capture:true });
 
   // Start screen: immediately show the school-gate image before the user presses START.
   images[0].addEventListener("load", drawInitialGate);

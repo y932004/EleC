@@ -137,9 +137,12 @@ body::after{
   position:absolute; inset:0; z-index:30; display:block; cursor:pointer;
   -webkit-tap-highlight-color:transparent; touch-action:manipulation;
 }
-.intro-toggle:checked + .intro{
+html:not(.js-ok) .intro-toggle:checked + .intro{
   opacity:0; visibility:hidden; pointer-events:none;
   transition:opacity .55s ease .95s, visibility 0s linear 1.5s;
+}
+.js-ok .intro-toggle:checked + .intro .intro-tap-layer{
+  pointer-events:none;
 }
 .intro-toggle:checked + .intro .envelope-wrap .flap{
   transform:rotateX(180deg); filter:brightness(1.08);
@@ -177,10 +180,11 @@ body::after{
 .intro-photo.fly{animation:photoFly 1.8s ease-out forwards}
 @keyframes photoFly{
   0%{opacity:0; transform:translate(0px,0px) rotate(0deg) scale(.9)}
-  8%{opacity:1}
-  35%{transform:translate(var(--spreadX,0px), var(--spreadY,0px)) rotate(calc(var(--rot,0deg) * 1)) scale(1.02)}
-  68%{transform:translate(var(--convergeX,0px), var(--convergeY,0px)) rotate(calc(var(--rot,0deg) + 18deg)) scale(1.08)}
-  92%{transform:translate(var(--exitX,0px), var(--exitY,0px)) rotate(calc(var(--rot,0deg) + 36deg)) scale(.94); opacity:.6}
+  6%{opacity:1}
+  13%{transform:translate(var(--spreadX,0px), var(--spreadY,0px)) rotate(var(--rot,0deg)) scale(1)}
+  84%{transform:translate(var(--spreadX,0px), var(--spreadY,0px)) rotate(var(--rot,0deg)) scale(1); opacity:1}
+  90%{transform:translate(var(--convergeX,0px), var(--convergeY,0px)) rotate(calc(var(--rot,0deg) + 18deg)) scale(1.04)}
+  96%{transform:translate(var(--exitX,0px), var(--exitY,0px)) rotate(calc(var(--rot,0deg) + 36deg)) scale(.94); opacity:.6}
   100%{transform:translate(var(--exitX,0px), calc(var(--exitY,0px) + 220px)); opacity:0}
 }
 .envelope-wrap{
@@ -268,6 +272,24 @@ body::after{
 @keyframes sealPulse{50%{box-shadow:0 4px 18px rgba(0,0,0,.35), 0 0 40px rgba(236,190,104,.82)}}
 .intro h1{font-weight:600; letter-spacing:.03em; font-size:clamp(28px,3.4vw,42px); margin:6px 0 12px}
 .intro p{color:#e2d5be; font-size:17px; line-height:1.9}
+.desktop-easter-egg{
+  display:inline-block; position:relative; margin-top:8px;
+  border:0; outline:0; background:none;
+  color:#d9ad50; font-size:18px; font-weight:700; letter-spacing:.16em;
+  text-shadow:0 0 9px rgba(241,197,101,.38),0 0 22px rgba(180,125,36,.20);
+}
+.desktop-easter-egg::after{
+  content:attr(data-text); position:absolute; inset:0;
+  color:transparent; text-shadow:none;
+  background:linear-gradient(105deg,transparent 35%,#fff8c9 48%,#fff 50%,#fff8c9 52%,transparent 65%);
+  background-size:250% 100%;
+  -webkit-background-clip:text; background-clip:text;
+  animation:easterEggShine 2.8s ease-in-out infinite;
+}
+@keyframes easterEggShine{
+  0%,22%{background-position:120% 0}
+  62%,100%{background-position:-120% 0}
+}
 
 .open-btn,.cta,.qr-btn{
   border:1px solid rgba(223,186,114,.7); color:#f4e7c5; background:rgba(72,39,28,.42);
@@ -287,15 +309,32 @@ nav{
   position:fixed; z-index:80; top:0; left:0; right:0;
   display:flex; justify-content:space-between; align-items:center;
   padding:18px clamp(17px,5vw,74px);
-  background:linear-gradient(180deg,rgba(7,11,14,.82),transparent);
-  backdrop-filter:blur(3px);
+  background:
+    linear-gradient(180deg,rgba(7,11,14,.94),rgba(7,11,14,.68) 66%,transparent),
+    linear-gradient(90deg,transparent,rgba(222,183,105,.05),transparent);
+  border-bottom:1px solid rgba(222,183,105,.12);
+  box-shadow:0 10px 34px rgba(0,0,0,.12);
+  backdrop-filter:blur(8px);
 }
-nav .brand{letter-spacing:.04em; font-size:17px; color:#f1dfb5; font-family:var(--hand-font); white-space:nowrap}
+nav .brand{
+  position:relative; letter-spacing:.08em; font-size:17px; color:#f1dfb5;
+  font-family:var(--hand-font); white-space:nowrap;
+  text-shadow:0 0 18px rgba(232,193,113,.18);
+}
+nav .brand::before{
+  content:"✦"; margin-right:10px; color:#d7ad5d; font-size:.7em;
+  text-shadow:0 0 10px rgba(240,201,119,.5);
+}
 nav a{
   color:#f1dfb5; text-decoration:none; font-size:16px;
   border:1px solid rgba(219,177,102,.45); padding:9px 16px; border-radius:99px; transition:.3s;
+  background:linear-gradient(180deg,rgba(255,236,190,.06),rgba(96,61,27,.08));
+  box-shadow:inset 0 0 0 1px rgba(255,241,204,.04);
 }
-nav a:hover{background:rgba(214,173,96,.13); box-shadow:0 0 18px rgba(214,173,96,.25)}
+nav a:hover{
+  border-color:rgba(235,198,124,.72); background:rgba(214,173,96,.13);
+  box-shadow:0 0 18px rgba(214,173,96,.25),inset 0 0 12px rgba(255,231,177,.08);
+}
 
 section{position:relative; min-height:100vh; padding:110px clamp(18px,6vw,92px); z-index:4}
 .hero{
@@ -342,11 +381,23 @@ section{position:relative; min-height:100vh; padding:110px clamp(18px,6vw,92px);
   .hero p{max-width:960px}
 }
 
-.section-title{max-width:860px; margin:0 auto 18px; text-align:center}
+.section-title{max-width:860px; margin:0 auto 18px; text-align:center; position:relative; padding-bottom:28px}
+.section-title::before{
+  content:""; position:absolute; left:50%; bottom:9px; width:min(360px,62vw); height:1px;
+  transform:translateX(-50%);
+  background:linear-gradient(90deg,transparent,rgba(216,175,93,.2) 14%,rgba(246,216,146,.76) 50%,rgba(216,175,93,.2) 86%,transparent);
+  box-shadow:0 0 10px rgba(224,183,101,.14);
+}
+.section-title::after{
+  content:"◆"; position:absolute; left:50%; bottom:0; transform:translateX(-50%) rotate(45deg);
+  color:#d5aa58; font-size:10px; line-height:18px; width:18px; height:18px;
+  border:1px solid rgba(225,188,114,.42); background:#11181d;
+  box-shadow:0 0 0 4px rgba(216,175,93,.05),0 0 16px rgba(216,175,93,.2);
+}
 .section-title h2{
   font-size:clamp(38px,5vw,68px); font-weight:700; margin:0 0 14px;
   color:#f1e3bf;
-  text-shadow:0 2px 0 rgba(95,62,26,.8), 0 0 12px rgba(219,178,97,.16);
+  text-shadow:0 2px 0 rgba(95,62,26,.8),0 0 12px rgba(219,178,97,.16),0 12px 38px rgba(0,0,0,.2);
 }
 .section-title p{line-height:2; color:#ded3bd; margin:0; font-size:18px}
 .reveal{opacity:1; transform:none; transition:opacity .85s ease, transform .85s ease}
@@ -364,8 +415,21 @@ section{position:relative; min-height:100vh; padding:110px clamp(18px,6vw,92px);
   width:min(1180px,100%); min-height:780px; margin:18px auto 0; position:relative; border-radius:28px; overflow:hidden;
   background:linear-gradient(180deg,rgba(11,17,22,.24),rgba(11,17,22,.70)),
              radial-gradient(circle at 50% 50%,rgba(255,219,147,.08),transparent 28%);
-  border:1px solid rgba(214,173,96,.22);
-  box-shadow:inset 0 0 100px rgba(0,0,0,.35), 0 30px 70px rgba(0,0,0,.18), 0 0 0 1px rgba(245,213,141,.08);
+  border:1px solid rgba(214,173,96,.34);
+  box-shadow:inset 0 0 100px rgba(0,0,0,.35),inset 0 0 0 7px rgba(255,231,174,.025),0 30px 70px rgba(0,0,0,.18),0 0 0 1px rgba(245,213,141,.08);
+}
+.puzzle-stage::before{
+  content:""; position:absolute; inset:10px; z-index:1; pointer-events:none; border-radius:20px;
+  border:1px solid rgba(234,199,126,.13);
+  background:
+    linear-gradient(90deg,rgba(230,193,117,.45),rgba(230,193,117,.45)) left 12px top 12px/34px 1px no-repeat,
+    linear-gradient(rgba(230,193,117,.45),rgba(230,193,117,.45)) left 12px top 12px/1px 34px no-repeat,
+    linear-gradient(90deg,rgba(230,193,117,.45),rgba(230,193,117,.45)) right 12px top 12px/34px 1px no-repeat,
+    linear-gradient(rgba(230,193,117,.45),rgba(230,193,117,.45)) right 12px top 12px/1px 34px no-repeat,
+    linear-gradient(90deg,rgba(230,193,117,.45),rgba(230,193,117,.45)) left 12px bottom 12px/34px 1px no-repeat,
+    linear-gradient(rgba(230,193,117,.45),rgba(230,193,117,.45)) left 12px bottom 12px/1px 34px no-repeat,
+    linear-gradient(90deg,rgba(230,193,117,.45),rgba(230,193,117,.45)) right 12px bottom 12px/34px 1px no-repeat,
+    linear-gradient(rgba(230,193,117,.45),rgba(230,193,117,.45)) right 12px bottom 12px/1px 34px no-repeat;
 }
 .puzzle-stage::after{content:""; position:absolute; inset:0; pointer-events:none; background:conic-gradient(from 0deg, transparent, rgba(255,220,136,.07), transparent 20%, transparent 65%, rgba(255,220,136,.06), transparent); animation:runeSpin 16s linear infinite;}
 
@@ -414,20 +478,24 @@ section{position:relative; min-height:100vh; padding:110px clamp(18px,6vw,92px);
   overflow:hidden;
 }
 .story-footprints{
-  position:absolute; inset:0; pointer-events:none; z-index:1;
+  position:absolute; inset:0; pointer-events:none; z-index:4;
 }
 .map-footprint{
   --jitter:0deg;
-  position:absolute; width:42px; height:88px; opacity:.16;
+  --direction:0deg;
+  --foot-angle:0deg;
+  --side-scale:1;
+  position:absolute; width:42px; height:88px; opacity:.63;
   transform-origin:center center;
+  transform:translate(-50%,-50%) rotate(calc(var(--direction) + var(--foot-angle) + var(--jitter))) scaleX(var(--side-scale));
   animation:footFade 2.8s ease-out forwards;
 }
 .map-footprint::before,
 .map-footprint::after{
   content:"";
   position:absolute; left:50%; transform:translateX(-50%);
-  background:rgba(188,155,98,.58);
-  box-shadow:0 0 10px rgba(188,155,98,.08);
+  background:#846541;
+  box-shadow:0 0 10px rgba(96,72,44,.16);
 }
 .map-footprint::before{
   top:0; width:30px; height:56px;
@@ -439,17 +507,26 @@ section{position:relative; min-height:100vh; padding:110px clamp(18px,6vw,92px);
   clip-path:polygon(16% 8%, 84% 0, 100% 28%, 96% 74%, 78% 100%, 24% 100%, 6% 76%, 0 30%);
   border-radius:42% 42% 56% 56% / 24% 24% 72% 72%;
 }
-.map-footprint.left{ transform:translate(-50%,-50%) rotate(calc(-20deg + var(--jitter))); }
-.map-footprint.right{ transform:translate(-50%,-50%) rotate(calc(16deg + var(--jitter))) scaleX(-1); }
+.map-footprint.left{--foot-angle:-9deg}
+.map-footprint.right{--foot-angle:9deg;--side-scale:-1}
 @keyframes footFade{
-  0%{opacity:.20; filter:blur(.15px)}
-  55%{opacity:.13}
-  100%{opacity:0; transform:translate(-50%,-50%) scale(.94); filter:blur(1px)}
+  0%{opacity:.63; filter:blur(.15px)}
+  55%{opacity:.63}
+  100%{
+    opacity:0;
+    transform:translate(-50%,-50%) rotate(calc(var(--direction) + var(--foot-angle) + var(--jitter))) scaleX(var(--side-scale)) scale(.94);
+    filter:blur(1px);
+  }
 }
 .story-card{
   width:min(850px,100%); padding:clamp(28px,5vw,58px);
-  background:linear-gradient(135deg,rgba(237,221,186,.97),rgba(211,184,134,.93));
-  color:#392c22; border-radius:10px; box-shadow:var(--shadow); position:relative; z-index:3; transform:rotate(-1deg);
+  background:
+    repeating-linear-gradient(0deg,rgba(92,62,30,.025) 0 1px,transparent 1px 5px),
+    radial-gradient(circle at 16% 18%,rgba(255,249,222,.62),transparent 28%),
+    linear-gradient(135deg,rgba(239,224,190,.98),rgba(207,177,123,.96));
+  color:#392c22; border:1px solid rgba(105,72,35,.24); border-radius:10px;
+  box-shadow:var(--shadow),inset 0 0 0 7px rgba(255,247,218,.18),inset 0 0 42px rgba(91,58,25,.08);
+  position:relative; z-index:3; transform:rotate(-1deg);
 }
 .story-card::before,.story-card::after{content:""; position:absolute; width:68px; height:20px; background:rgba(220,198,153,.75); top:-10px}
 .story-card::before{left:8%; transform:rotate(-6deg)} .story-card::after{right:8%; transform:rotate(5deg)}
@@ -624,14 +701,20 @@ section{position:relative; min-height:100vh; padding:110px clamp(18px,6vw,92px);
 
 .form-section{
   display:grid; place-items:center;
-  background:linear-gradient(180deg,rgba(35,19,13,.9),rgba(12,10,9,.96)),
+  background:linear-gradient(180deg,rgba(35,19,13,.76),rgba(12,10,9,.82)),
              radial-gradient(circle at 14% 20%,rgba(212,162,30,.12),transparent 23%),
              radial-gradient(circle at 86% 70%,rgba(31,74,61,.12),transparent 22%);
+  backdrop-filter:blur(1px);
 }
 .form-shell{
   width:min(860px,100%); padding:clamp(24px,5vw,52px);
-  background:linear-gradient(145deg,#efe2c2,#d8bd86); color:#33271e;
-  border-radius:16px; box-shadow:var(--shadow); position:relative; overflow:hidden;
+  background:
+    repeating-linear-gradient(90deg,rgba(89,58,28,.018) 0 1px,transparent 1px 6px),
+    radial-gradient(circle at 10% 8%,rgba(255,252,229,.62),transparent 25%),
+    linear-gradient(145deg,#f0e4c6,#d6b87f);
+  color:#33271e; border:1px solid rgba(109,75,36,.3);
+  border-radius:16px; box-shadow:var(--shadow),inset 0 0 0 8px rgba(255,248,222,.13),inset 0 0 48px rgba(90,57,24,.08);
+  position:relative; overflow:hidden;
 }
 .form-shell::before{
   content:""; position:absolute; width:220px; height:220px; right:-70px; top:-80px;
@@ -651,7 +734,13 @@ section{position:relative; min-height:100vh; padding:110px clamp(18px,6vw,92px);
 label{display:block; font-size:20px; margin:18px 0 8px; color:#412e1f}
 input,textarea{
   width:100%; padding:13px 14px; border:1px solid rgba(68,47,27,.24);
-  border-radius:9px; background:rgba(255,250,235,.8); font:inherit; color:#35261a; outline:none; font-size:18px;
+  border-radius:9px; background:rgba(255,250,235,.82); font:inherit; color:#35261a; outline:none; font-size:18px;
+  box-shadow:inset 0 2px 8px rgba(80,51,22,.06),0 1px 0 rgba(255,255,255,.5);
+  transition:border-color .25s,box-shadow .25s,background .25s;
+}
+input:focus,textarea:focus{
+  border-color:rgba(126,82,37,.68); background:rgba(255,253,242,.96);
+  box-shadow:0 0 0 3px rgba(178,128,61,.14),inset 0 2px 7px rgba(80,51,22,.05);
 }
 textarea{min-height:96px; resize:vertical}
 .radio-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:9px}
@@ -659,7 +748,7 @@ textarea{min-height:96px; resize:vertical}
   padding:13px; border:1px solid rgba(68,47,27,.2); border-radius:9px;
   background:rgba(255,250,235,.5); cursor:pointer; transition:.25s; font-size:18px;
 }
-.radio:hover{transform:translateY(-3px); background:rgba(255,250,235,.8)}
+.radio:hover{transform:translateY(-3px); background:rgba(255,250,235,.8); box-shadow:0 8px 18px rgba(81,51,23,.09)}
 .radio.active{background:rgba(255,248,231,.98); border-color:rgba(125,85,41,.55); box-shadow:0 0 0 2px rgba(241,205,131,.42)}
 .calendar-wrap{
   margin-top:18px; padding:18px; border-radius:14px; background:rgba(255,248,232,.62); border:1px solid rgba(120,83,39,.18); display:none;
@@ -692,7 +781,12 @@ textarea{min-height:96px; resize:vertical}
 .summary-box h5{margin:0 0 8px; font-size:18px; color:#6a4b2b}
 .summary-box p{margin:0; font-size:15px; color:#5c4735; line-height:1.7; min-height:40px}
 .form-actions{display:flex; justify-content:flex-end; margin-top:22px}
-footer{padding:28px; text-align:center; color:#d0bd94; font-size:16px; letter-spacing:.04em; position:relative; z-index:4}
+footer{
+  padding:34px 28px; text-align:center; color:#d0bd94; font-size:16px; letter-spacing:.08em;
+  position:relative; z-index:4; border-top:1px solid rgba(216,175,93,.12);
+  background:linear-gradient(180deg,rgba(8,14,18,.1),rgba(8,14,18,.62));
+  text-shadow:0 1px 12px rgba(0,0,0,.35);
+}
 
 .qr-modal{
   position:fixed; inset:0; background:rgba(6,10,14,.75); backdrop-filter:blur(6px);
@@ -791,9 +885,6 @@ body.modal-open{overflow:hidden;touch-action:none}
 @media (max-width:720px){
   body{overflow-x:hidden}
   section{padding:74px 16px;min-height:auto}
-
-/* Game preview styling handled in dedicated section */
-.game-embed-wrap{position:relative}
 
   nav{padding:12px 14px;gap:10px}
   nav .brand{font-size:13px;line-height:1.25;white-space:normal;max-width:62vw}
@@ -909,6 +1000,7 @@ body.modal-open{overflow:hidden;touch-action:none}
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important; transition:none!important; scroll-behavior:auto!important}
   .cursor,.cursor-ring,.trail,.gear{display:none}
+  .desktop-easter-egg::after{display:none}
 }
 
 /* ===== Mobile resilient fallback: content stays usable even when JS is blocked ===== */
@@ -953,15 +1045,16 @@ body.modal-open{overflow:hidden;touch-action:none}
 }
 
 
-/* ===== Embedded campus broomstick game PREVIEW card ===== */
+/* ===== Embedded campus broomstick game section ===== */
 .game-embed-section{
   min-height:auto;
   padding-top:78px;
   padding-bottom:78px;
   background:
-    linear-gradient(180deg,rgba(15,21,26,.92),rgba(11,15,18,.96)),
+    linear-gradient(180deg,rgba(15,21,26,.76),rgba(11,15,18,.82)),
     radial-gradient(circle at 18% 22%,rgba(216,175,93,.12),transparent 26%),
     radial-gradient(circle at 84% 72%,rgba(44,93,130,.14),transparent 24%);
+  backdrop-filter:blur(1px);
   overflow:hidden;
 }
 .game-embed-section::before{
@@ -971,26 +1064,24 @@ body.modal-open{overflow:hidden;touch-action:none}
 }
 .game-embed-wrap{
   width:min(1180px,100%); margin:26px auto 0; position:relative; z-index:2;
-  padding:22px; border-radius:18px;
-  background:linear-gradient(145deg,rgba(239,226,194,.04),rgba(216,188,134,.03));
-  border:1px solid rgba(216,175,93,.12);
-  box-shadow:0 22px 48px rgba(0,0,0,.38), inset 0 0 0 1px rgba(255,240,198,.03);
-  display:flex; gap:18px; align-items:center; justify-content:space-between;
+  padding:10px;
+  border-radius:26px;
+  background:linear-gradient(145deg,rgba(239,226,194,.14),rgba(216,188,134,.08));
+  border:1px solid rgba(216,175,93,.36);
+  box-shadow:0 28px 70px rgba(0,0,0,.32),inset 0 0 0 1px rgba(255,240,198,.12),inset 0 0 34px rgba(0,0,0,.16);
 }
-.game-preview-thumb{
-  width:min(54%,580px); aspect-ratio:16/9; border-radius:12px; background:linear-gradient(180deg,#cda76a,#f3dfb3);
-  box-shadow:inset 0 0 28px rgba(0,0,0,.18), 0 8px 24px rgba(0,0,0,.36);
+.game-embed-wrap::after{
+  content:""; position:absolute; inset:4px; pointer-events:none; border-radius:22px;
+  border:1px solid rgba(246,216,151,.13);
+  box-shadow:inset 0 0 24px rgba(245,209,137,.035);
 }
-.game-preview-copy{flex:1; color:#f3e7c6; padding:6px 12px}
-.game-preview-copy .eyebrow{color:#e7d3a7; font-weight:600; letter-spacing:.08em}
-.game-preview-copy h2{margin:8px 0 6px; color:#fff}
-.game-preview-copy p{opacity:.9; color:#f0e5c8}
-.game-preview-actions{margin-top:12px}
-.game-enter-btn{display:inline-block; text-decoration:none; border:1px solid rgba(223,186,114,.9); color:#1b140f; background:#f7e6b8; padding:12px 18px; border-radius:999px; font-weight:700}
+.game-embed-frame{
+  display:block; width:100%; aspect-ratio:16/9; height:auto;
+  border:0; border-radius:16px; background:#e0b77c;
+  box-shadow:0 16px 38px rgba(0,0,0,.28);
+}
 @media (max-width:720px){
-  .game-embed-wrap{flex-direction:column; align-items:stretch}
-  .game-preview-thumb{width:100%; height:auto}
-  .game-preview-copy{padding:8px 4px}
+  .game-embed-section{display:none}
 }
 
 </style>
@@ -1025,7 +1116,7 @@ body.modal-open{overflow:hidden;touch-action:none}
     </div>
     <h1>有一封信，想把我們重新召集回來。</h1>
     <p>一封遲了很多年的邀請函。<br>你願意再回來一次嗎？</p>
-    <button class="open-btn" id="openBtn">點擊打開邀請函</button>
+    <div class="desktop-easter-egg" data-text="電腦版本有彩蛋">電腦版本有彩蛋</div>
   </div>
 </div>
 
@@ -1064,7 +1155,7 @@ body.modal-open{overflow:hidden;touch-action:none}
     <div class="eyebrow" style="color:#76522e">A LETTER TO OUR CLASS</div>
     <h2>我們曾經從同一個校門口走進去。</h2>
     <p>後來走向不同的地方。<br>但少了任何一塊，好像都不太完整。<br>有些拼圖，也許只是還沒收到邀請。<br>這一次，想請你一起把大家找回來。</p>
-    <button class="cta" onclick="alert('原型示意：這裡可以串接 LINE 分享與複製連結功能。')">幫忙把邀請傳出去</button>
+    <button class="cta" id="shareInvitationBtn">幫忙把邀請傳出去</button>
   </div>
 </section>
 
@@ -1075,15 +1166,7 @@ body.modal-open{overflow:hidden;touch-action:none}
     <h2>騎上掃把，<br>再跑一次我們的校園。</h2>
   </div>
   <div class="game-embed-wrap reveal">
-    <div class="game-preview-thumb" aria-hidden="true"></div>
-    <div class="game-preview-copy">
-      <div class="eyebrow">A LITTLE CAMPUS QUEST</div>
-      <h2>騎上掃把，再跑一次我們的校園。</h2>
-      <p>短短幾分鐘的復古校園小跑，適合手機操作。若想完整體驗，按下「進入掃把遊戲 ▶」以同一分頁開啟遊戲。</p>
-      <div class="game-preview-actions">
-        <button id="enterGameBtn" class="game-enter-btn">進入掃把遊戲 ▶</button>
-      </div>
-    </div>
+    <iframe class="game-embed-frame" src="campus_broomstick_webapp/index.html" title="校園掃把小遊戲" loading="eager" allow="fullscreen; autoplay"></iframe>
   </div>
 </section>
 
@@ -1213,7 +1296,32 @@ const intro=document.getElementById('intro');
 const envelope=document.getElementById('envelope');
 const introBurst=document.getElementById('introBurst');
 const introToggle=document.getElementById('introToggle');
+const shareInvitationBtn=document.getElementById('shareInvitationBtn');
 let introOpening=false;
+
+shareInvitationBtn.addEventListener('click',async()=>{
+  const invitationUrl='https://elec-0uq6.onrender.com/';
+  try{
+    if(navigator.clipboard && window.isSecureContext){
+      await navigator.clipboard.writeText(invitationUrl);
+    }else{
+      const copyField=document.createElement('textarea');
+      copyField.value=invitationUrl;
+      copyField.setAttribute('readonly','');
+      copyField.style.position='fixed';
+      copyField.style.opacity='0';
+      document.body.appendChild(copyField);
+      copyField.select();
+      const copied=document.execCommand('copy');
+      copyField.remove();
+      if(!copied) throw new Error('Copy failed');
+    }
+    alert('已成功複製連結');
+  }catch(error){
+    alert('無法自動複製，請手動複製：https://elec-0uq6.onrender.com/');
+  }
+});
+
 function createFlyingLetters(){
   // if photo set exists, fly photos; otherwise fall back to small notes
   const photoFiles = [
@@ -1236,17 +1344,37 @@ function createFlyingLetters(){
   const spreadRadius = Math.min(window.innerWidth, window.innerHeight) * 0.45;
   const convergeCenterX = Math.round(introRect.width/2);
   const convergeCenterY = Math.round(introRect.height * 0.62);
+  const landscape = introRect.width >= 720;
+  const edgeGap = landscape ? 18 : 10;
+  const photoSize = landscape
+    ? Math.max(82, Math.min(170, (introRect.width-edgeGap*6)/5, (introRect.height-edgeGap*4)/3))
+    : Math.max(58, Math.min(118, (introRect.width-edgeGap*3)/2.7, (introRect.height-edgeGap*7)/6));
+  const edgeX = photoSize/2+edgeGap;
+  const edgeY = photoSize/2+edgeGap;
+  const photoSlots = landscape
+    ? [
+        [.10,.14],[.37,.14],[.63,.14],[.90,.14],
+        [.90,.50],
+        [.90,.86],[.63,.86],[.37,.86],[.10,.86],
+        [.10,.50]
+      ]
+    : Array.from({length:10},(_,slotIndex)=>{
+        const side = slotIndex%2===0 ? edgeX : introRect.width-edgeX;
+        const row = Math.floor(slotIndex/2);
+        const y = edgeY+(introRect.height-edgeY*2)*(row/4);
+        return [side/introRect.width,y/introRect.height];
+      });
   for(let i=0;i<count;i++){
-    // random rotation
-    const rot = `${(Math.random()*140-70).toFixed(1)}deg`;
-    const delay = `${i*45}ms`;
+    const rotation = Math.random()*28-14;
+    const delayMs = i*45;
+    const rot = `${rotation.toFixed(1)}deg`;
+    const delay = `${delayMs}ms`;
     if(usePhotos){
       const img=document.createElement('img');
       img.className='intro-photo fly';
       const fn = photoFiles[i % photoFiles.length];
       img.src = `assets/picofele/${encodeURIComponent(fn)}`;
-      // larger random size between 120 and 220 px (user requested bigger)
-      const size = Math.floor(120 + Math.random() * 101);
+      const size = Math.floor(photoSize);
       img.style.width = `${size}px`;
       img.style.height = `${size}px`;
       img.style.borderRadius = '0';
@@ -1258,16 +1386,11 @@ function createFlyingLetters(){
       const startTop = Math.round(envRect.top - introRect.top + (envRect.height/2) - (size/2));
       img.style.left = `${startLeft}px`;
       img.style.top = `${startTop}px`;
-      // compute spread (outward) offset: choose quadrant uniformly
-      const quadrant = Math.floor(Math.random() * 4); // 0..3
-      const magX = Math.floor(Math.random() * Math.floor(spreadRadius * 0.9));
-      const magY = Math.floor(Math.random() * Math.floor(spreadRadius * 0.9) * (0.6 + Math.random() * 0.8));
-      let spreadX = magX;
-      let spreadY = magY;
-      if (quadrant === 0) { spreadX = magX; spreadY = magY; }       // right-bottom
-      else if (quadrant === 1) { spreadX = -magX; spreadY = magY; } // left-bottom
-      else if (quadrant === 2) { spreadX = -magX; spreadY = -magY; } // left-top
-      else { spreadX = magX; spreadY = -magY; }                      // right-top
+      const [slotX,slotY] = photoSlots[i%photoSlots.length];
+      const targetLeft = slotX*introRect.width-size/2;
+      const targetTop = slotY*introRect.height-size/2;
+      const spreadX = Math.round(targetLeft-startLeft);
+      const spreadY = Math.round(targetTop-startTop);
       // compute converge (to center-bottom) offset from start
       const convergeX = Math.round(convergeCenterX - (size/2) - startLeft);
       const convergeY = Math.round(convergeCenterY - (size/2) - startTop);
@@ -1283,14 +1406,15 @@ function createFlyingLetters(){
       img.style.setProperty('--rot', rot);
       // make sure photo appears above envelope
       img.style.zIndex = '4001';
-      // much slower random duration between 6600ms and 9000ms, scaled 1.3x to slow overall
-      const duration = Math.floor((6600 + Math.random() * 2400) * 1.3);
-      if(duration > maxDuration) maxDuration = duration;
+      // About 1.8s spread, 10s hold, then gather and leave.
+      const duration = 14000;
+      const totalDuration = duration+delayMs;
+      if(totalDuration > maxDuration) maxDuration = totalDuration;
       img.style.animationDuration = `${duration}ms`;
       img.style.animationDelay = delay;
       img.style.animationTimingFunction = 'cubic-bezier(.2,.8,.25,1)';
       introBurst.appendChild(img);
-      setTimeout(()=>img.remove(), duration + 400);
+      setTimeout(()=>img.remove(), totalDuration + 400);
     } else {
       const note=document.createElement('span');
       note.className='intro-note fly';
@@ -1339,7 +1463,7 @@ function openIntroEnvelope(){
   envelope.classList.add('opened');
   const max = createFlyingLetters();
   // keep intro visible long enough for the photos to finish flying
-  const hideDelay = (max && !isNaN(max)) ? (max + 500) : 4200;
+  const hideDelay = (max && !isNaN(max)) ? (max + 2000) : 16000;
   setTimeout(()=>{ intro.classList.add('hidden'); introOpening=false; }, hideDelay);
 }
 if(introToggle){
@@ -1352,7 +1476,7 @@ function handleIntroTouch(event){
   if(event && event.cancelable) event.preventDefault();
   openIntroEnvelope();
 }
-[envelope,openBtn].forEach(el=>{
+[envelope,openBtn].filter(Boolean).forEach(el=>{
   el.addEventListener('click',openIntroEnvelope);
   el.addEventListener('touchstart',handleIntroTouch,{passive:false});
   el.addEventListener('pointerdown',openIntroEnvelope);
@@ -1553,23 +1677,45 @@ const storyMapZone=document.getElementById('storyMapZone');
 const storyFootprints=document.getElementById('storyFootprints');
 let lastFootprint=0;
 let footSide=false;
+let lastFootX=null;
+let lastFootY=null;
 storyMapZone.addEventListener('mousemove',e=>{
   if(coarsePointer || window.innerWidth<=760) return;
-  const now=Date.now();
-  if(now-lastFootprint<120) return;
   const rect=storyMapZone.getBoundingClientRect();
   const x=e.clientX-rect.left;
   const y=e.clientY-rect.top;
+  if(lastFootX===null || lastFootY===null){
+    lastFootX=x;
+    lastFootY=y;
+    return;
+  }
+  const now=Date.now();
+  if(now-lastFootprint<240) return;
+  const dx=x-lastFootX;
+  const dy=y-lastFootY;
+  const distance=Math.hypot(dx,dy);
+  if(distance<28) return;
+  const direction=Math.atan2(dy,dx)*180/Math.PI+90;
+  const sideOffset=footSide?-10:10;
+  const offsetX=Math.cos(direction*Math.PI/180)*sideOffset;
+  const offsetY=Math.sin(direction*Math.PI/180)*sideOffset;
   const fp=document.createElement('span');
   fp.className='map-footprint '+(footSide?'left':'right');
-  fp.style.left=(x+(footSide?-10:10))+'px';
-  fp.style.top=(y+10)+'px';
-  fp.style.opacity=(0.11+Math.random()*0.06).toFixed(2);
+  fp.style.left=(x+offsetX)+'px';
+  fp.style.top=(y+offsetY)+'px';
+  fp.style.opacity='0.63';
+  fp.style.setProperty('--direction', `${direction.toFixed(1)}deg`);
   fp.style.setProperty('--jitter', `${(Math.random()*8-4).toFixed(1)}deg`);
   storyFootprints.appendChild(fp);
   setTimeout(()=>fp.remove(),2800);
   lastFootprint=now;
+  lastFootX=x;
+  lastFootY=y;
   footSide=!footSide;
+});
+storyMapZone.addEventListener('mouseleave',()=>{
+  lastFootX=null;
+  lastFootY=null;
 });
 
 const memoryModal=document.getElementById('memoryModal');
@@ -1730,59 +1876,24 @@ function drawQrPlaceholder(){
     }
   }
 }
-drawQrPlaceholder();
 
-// game preview: load game inline into this page (fetch game page and inject DOM + script)
-const enterBtn = document.getElementById('enterGameBtn');
-let _gameLoaded = false;
-if(enterBtn){
-  enterBtn.addEventListener('click', async ()=>{
-    if(_gameLoaded) return;
-    enterBtn.disabled = true; enterBtn.textContent = '載入遊戲中…';
-    try{
-      const res = await fetch('campus_broomstick_webapp/index.html', {cache:'no-store'});
-      const text = await res.text();
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(text, 'text/html');
-      const gameFrame = doc.querySelector('.game-frame');
-      const mobileControls = doc.querySelector('.mobile-controls');
-      const wrap = document.querySelector('.game-embed-wrap');
-      if(gameFrame){
-        // remove preview thumb/copy
-        const thumb = wrap.querySelector('.game-preview-thumb'); if(thumb) thumb.remove();
-        const copy = wrap.querySelector('.game-preview-copy'); if(copy) copy.remove();
-        // insert cloned nodes
-        const container = document.createElement('div'); container.className = 'inline-game-container';
-        container.appendChild(document.importNode(gameFrame, true));
-        if(mobileControls) container.appendChild(document.importNode(mobileControls, true));
-        wrap.appendChild(container);
-        // load game CSS from game folder so injected DOM styles correctly
-        try{
-          if(!document.querySelector('link[data-game-style]')){
-            const link = document.createElement('link');
-            link.rel = 'stylesheet';
-            link.href = 'campus_broomstick_webapp/style.css';
-            link.setAttribute('data-game-style','1');
-            document.head.appendChild(link);
-          }
-        } catch(e){ console.warn('Could not load game stylesheet', e); }
-        // load game script from its folder and wait for load/error
-        const s = document.createElement('script'); s.src = 'campus_broomstick_webapp/game.js'; s.defer = true;
-        s.onload = ()=>{ _gameLoaded = true; enterBtn.textContent = '開始遊戲'; enterBtn.disabled = true; setTimeout(()=>{ container.scrollIntoView({behavior:'smooth', block:'center'}); }, 120); };
-        s.onerror = (err)=>{ console.error('game.js failed to load', err); enterBtn.textContent = '載入失敗，前往遊戲頁面'; enterBtn.disabled = false; enterBtn.addEventListener('click', ()=>{ window.location.assign(new URL('./campus_broomstick_webapp/', document.baseURI)); }); };
-        document.body.appendChild(s);
-      } else {
-        // fallback: navigate to game page
-        const gameUrl = new URL('./campus_broomstick_webapp/', document.baseURI);
-        window.location.assign(gameUrl);
-      }
-    } catch (e){
-      console.error('Failed to load inline game', e);
-      const gameUrl = new URL('./campus_broomstick_webapp/', document.baseURI);
-      window.location.assign(gameUrl);
-    }
+const campusGameFrame=document.querySelector('.game-embed-frame');
+let campusWheelDelta=0;
+let campusWheelFrame=0;
+window.addEventListener('message',event=>{
+  if(!campusGameFrame || event.source!==campusGameFrame.contentWindow) return;
+  if(!event.data || event.data.type!=='campus-game-wheel') return;
+  const unit=event.data.deltaMode===1 ? 16 : event.data.deltaMode===2 ? window.innerHeight : 1;
+  campusWheelDelta+=Number(event.data.deltaY||0)*unit;
+  if(campusWheelFrame) return;
+  campusWheelFrame=requestAnimationFrame(()=>{
+    window.scrollBy(0,campusWheelDelta);
+    campusWheelDelta=0;
+    campusWheelFrame=0;
   });
-}
+});
+
+drawQrPlaceholder();
 
 // Full progressive enhancement initialized successfully.
 document.documentElement.classList.add('js-ok');
