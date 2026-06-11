@@ -813,6 +813,46 @@ footer{
 }
 .qr-actions{display:flex; gap:10px; justify-content:center; flex-wrap:wrap}
 
+.sprite-modal{
+  position:fixed; inset:0; z-index:8200; display:none; place-items:center; padding:18px;
+  background:rgba(5,9,13,.76); backdrop-filter:blur(8px);
+}
+.sprite-modal.show{display:grid; animation:spriteBackdropIn .22s ease-out}
+.sprite-card{
+  width:min(430px,calc(100vw - 32px)); position:relative; overflow:hidden;
+  padding:34px 28px 26px; text-align:center; color:#3f2c1c;
+  border:1px solid rgba(222,181,103,.62); border-radius:22px;
+  background:
+    radial-gradient(circle at 50% 0,rgba(255,250,218,.9),transparent 36%),
+    repeating-linear-gradient(0deg,rgba(100,67,31,.025) 0 1px,transparent 1px 5px),
+    linear-gradient(145deg,#f5e9cb,#d9ba7e);
+  box-shadow:0 28px 80px rgba(0,0,0,.46),inset 0 0 0 7px rgba(255,249,224,.18),inset 0 0 42px rgba(94,59,24,.09);
+  animation:spriteCardIn .34s cubic-bezier(.2,.8,.2,1);
+}
+.sprite-card::before{
+  content:"✦"; display:grid; place-items:center; width:52px; height:52px; margin:0 auto 12px;
+  color:#fff0b2; font-size:25px; border-radius:50%;
+  background:radial-gradient(circle,#d9a94e 0 28%,#8a5a24 72%);
+  border:1px solid rgba(100,62,22,.34);
+  box-shadow:0 0 0 6px rgba(190,139,54,.1),0 0 26px rgba(206,156,68,.42);
+}
+.sprite-card::after{
+  content:""; position:absolute; inset:9px; border:1px solid rgba(114,74,32,.16);
+  border-radius:15px; pointer-events:none;
+}
+.sprite-title{margin:0 0 10px; color:#6a451f; font-size:27px; letter-spacing:.08em}
+.sprite-message{margin:0 0 22px; color:#4b3828; font-size:18px; line-height:1.8; overflow-wrap:anywhere}
+.sprite-confirm{
+  position:relative; z-index:1; min-width:132px; padding:11px 22px; cursor:pointer;
+  border:1px solid rgba(104,65,26,.5); border-radius:999px;
+  color:#fff4d5; background:linear-gradient(180deg,#8c6030,#65401f);
+  box-shadow:0 7px 18px rgba(75,44,18,.22),inset 0 1px rgba(255,239,194,.28);
+  font:700 17px var(--hand-font); letter-spacing:.08em; transition:.25s;
+}
+.sprite-confirm:hover{transform:translateY(-2px); box-shadow:0 10px 24px rgba(75,44,18,.3),0 0 18px rgba(213,164,77,.2)}
+@keyframes spriteBackdropIn{from{opacity:0}to{opacity:1}}
+@keyframes spriteCardIn{from{opacity:0;transform:translateY(16px) scale(.96)}to{opacity:1;transform:none}}
+
 .memory-bottle .paper-roll h3{font-size:clamp(18px,2.2vw,24px)}
 
 /* Mobile browser hardening */
@@ -1253,6 +1293,14 @@ body.modal-open{overflow:hidden;touch-action:none}
   </div>
 </div>
 
+<div class="sprite-modal" id="spriteModal" role="dialog" aria-modal="true" aria-labelledby="spriteTitle" aria-describedby="spriteMessage">
+  <div class="sprite-card">
+    <h3 class="sprite-title" id="spriteTitle">小精靈表示：</h3>
+    <p class="sprite-message" id="spriteMessage"></p>
+    <button class="sprite-confirm" id="closeSpriteModal">我知道了</button>
+  </div>
+</div>
+
 <svg width="0" height="0" style="position:absolute">
   <defs>
     <!-- Unified wine-red (deep burgundy) for all pieces -->
@@ -1297,7 +1345,26 @@ const envelope=document.getElementById('envelope');
 const introBurst=document.getElementById('introBurst');
 const introToggle=document.getElementById('introToggle');
 const shareInvitationBtn=document.getElementById('shareInvitationBtn');
+const spriteModal=document.getElementById('spriteModal');
+const spriteMessage=document.getElementById('spriteMessage');
+const closeSpriteModal=document.getElementById('closeSpriteModal');
 let introOpening=false;
+
+function showSpriteMessage(message){
+  spriteMessage.textContent=message;
+  spriteModal.classList.add('show');
+  document.body.classList.add('modal-open');
+  requestAnimationFrame(()=>closeSpriteModal.focus());
+}
+function hideSpriteMessage(){
+  spriteModal.classList.remove('show');
+  document.body.classList.remove('modal-open');
+  shareInvitationBtn.focus();
+}
+closeSpriteModal.addEventListener('click',hideSpriteMessage);
+spriteModal.addEventListener('click',event=>{
+  if(event.target===spriteModal) hideSpriteMessage();
+});
 
 shareInvitationBtn.addEventListener('click',async()=>{
   const invitationUrl='https://elec-0uq6.onrender.com/';
@@ -1316,9 +1383,9 @@ shareInvitationBtn.addEventListener('click',async()=>{
       copyField.remove();
       if(!copied) throw new Error('Copy failed');
     }
-    alert('已成功複製連結');
+    showSpriteMessage('已成功複製連結');
   }catch(error){
-    alert('無法自動複製，請手動複製：https://elec-0uq6.onrender.com/');
+    showSpriteMessage('無法自動複製，請手動複製：https://elec-0uq6.onrender.com/');
   }
 });
 
@@ -1748,7 +1815,10 @@ document.querySelectorAll('.memory-bottle').forEach(bottle=>{
 });
 
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape') closeMemoryModal();
+  if(e.key==='Escape'){
+    closeMemoryModal();
+    if(spriteModal.classList.contains('show')) hideSpriteMessage();
+  }
 });
 
 const radios=[...document.querySelectorAll('#intentGrid .radio')];
