@@ -1,6 +1,8 @@
 (() => {
   "use strict";
 
+  // Support being embedded in another page: compute asset base URL
+  const GAME_BASE = new URL('./campus_broomstick_webapp/', document.baseURI).href;
   const canvas = document.getElementById("gameCanvas");
   const ctx = canvas.getContext("2d");
   const W = canvas.width;
@@ -36,7 +38,7 @@
 
   const images = sceneDefs.map((scene) => {
     const image = new Image();
-    image.src = scene.src;
+    image.src = new URL(scene.src, GAME_BASE).href;
     return image;
   });
 

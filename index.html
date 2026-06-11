@@ -1732,12 +1732,46 @@ function drawQrPlaceholder(){
 }
 drawQrPlaceholder();
 
-// game preview: open game in same tab using a stable URL
+// game preview: load game inline into this page (fetch game page and inject DOM + script)
 const enterBtn = document.getElementById('enterGameBtn');
+let _gameLoaded = false;
 if(enterBtn){
-  enterBtn.addEventListener('click', ()=>{
-    const gameUrl = new URL("./campus_broomstick_webapp/", document.baseURI);
-    window.location.assign(gameUrl);
+  enterBtn.addEventListener('click', async ()=>{
+    if(_gameLoaded) return;
+    enterBtn.disabled = true; enterBtn.textContent = '載入遊戲中…';
+    try{
+      const res = await fetch('campus_broomstick_webapp/index.html', {cache:'no-store'});
+      const text = await res.text();
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(text, 'text/html');
+      const gameFrame = doc.querySelector('.game-frame');
+      const mobileControls = doc.querySelector('.mobile-controls');
+      const wrap = document.querySelector('.game-embed-wrap');
+      if(gameFrame){
+        // remove preview thumb/copy
+        const thumb = wrap.querySelector('.game-preview-thumb'); if(thumb) thumb.remove();
+        const copy = wrap.querySelector('.game-preview-copy'); if(copy) copy.remove();
+        // insert cloned nodes
+        const container = document.createElement('div'); container.className = 'inline-game-container';
+        container.appendChild(document.importNode(gameFrame, true));
+        if(mobileControls) container.appendChild(document.importNode(mobileControls, true));
+        wrap.appendChild(container);
+        // load game script from its folder
+        const s = document.createElement('script'); s.src = 'campus_broomstick_webapp/game.js'; s.defer = true;
+        document.body.appendChild(s);
+        _gameLoaded = true;
+        // ensure focus/scroll
+        setTimeout(()=>{ container.scrollIntoView({behavior:'smooth', block:'center'}); }, 200);
+      } else {
+        // fallback: navigate to game page
+        const gameUrl = new URL('./campus_broomstick_webapp/', document.baseURI);
+        window.location.assign(gameUrl);
+      }
+    } catch (e){
+      console.error('Failed to load inline game', e);
+      const gameUrl = new URL('./campus_broomstick_webapp/', document.baseURI);
+      window.location.assign(gameUrl);
+    }
   });
 }
 
