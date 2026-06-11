@@ -1756,12 +1756,21 @@ if(enterBtn){
         container.appendChild(document.importNode(gameFrame, true));
         if(mobileControls) container.appendChild(document.importNode(mobileControls, true));
         wrap.appendChild(container);
-        // load game script from its folder
+        // load game CSS from game folder so injected DOM styles correctly
+        try{
+          if(!document.querySelector('link[data-game-style]')){
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = 'campus_broomstick_webapp/style.css';
+            link.setAttribute('data-game-style','1');
+            document.head.appendChild(link);
+          }
+        } catch(e){ console.warn('Could not load game stylesheet', e); }
+        // load game script from its folder and wait for load/error
         const s = document.createElement('script'); s.src = 'campus_broomstick_webapp/game.js'; s.defer = true;
+        s.onload = ()=>{ _gameLoaded = true; enterBtn.textContent = '開始遊戲'; enterBtn.disabled = true; setTimeout(()=>{ container.scrollIntoView({behavior:'smooth', block:'center'}); }, 120); };
+        s.onerror = (err)=>{ console.error('game.js failed to load', err); enterBtn.textContent = '載入失敗，前往遊戲頁面'; enterBtn.disabled = false; enterBtn.addEventListener('click', ()=>{ window.location.assign(new URL('./campus_broomstick_webapp/', document.baseURI)); }); };
         document.body.appendChild(s);
-        _gameLoaded = true;
-        // ensure focus/scroll
-        setTimeout(()=>{ container.scrollIntoView({behavior:'smooth', block:'center'}); }, 200);
       } else {
         // fallback: navigate to game page
         const gameUrl = new URL('./campus_broomstick_webapp/', document.baseURI);
