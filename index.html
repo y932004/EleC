@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>興糖第68屆畢業生｜我們再拼一次・手機觸控修正版</title>
+<title>興糖第68屆畢業生 | 聚餐邀請</title>
 <style>
 :root{
   --bg:#081018;
@@ -160,7 +160,7 @@ html:not(.js-ok) .intro-toggle:checked + .intro{
   overflow:hidden;
 }
 .intro.hidden{opacity:0; visibility:hidden; pointer-events:none}
-.intro-inner{text-align:center; padding:28px; position:relative; z-index:2}
+.intro-inner{text-align:center; width:min(100%,720px); padding:28px; position:relative; z-index:2}
 .eyebrow{letter-spacing:.18em; font-size:12px; color:#cfb37a; font-family:var(--script-font)}
 .intro-burst{position:absolute; inset:0; pointer-events:none; z-index:4000; overflow:visible}
 .intro-note{
@@ -176,16 +176,19 @@ html:not(.js-ok) .intro-toggle:checked + .intro{
   100%{opacity:0; transform:translate(var(--spreadX, var(--tx, 0px)), var(--spreadY, var(--ty, 0px))) rotate(var(--rot,0deg)) scale(1.1)}
 }
 /* flying photos (used when opening the envelope) */
-.intro-photo{position:absolute;object-fit:cover;opacity:0;z-index:5;background:transparent;border-radius:0;box-shadow:none}
-.intro-photo.fly{animation:photoFly 1.8s ease-out forwards}
+.intro-photo{
+  position:absolute;object-fit:cover;opacity:0;z-index:5;background:transparent;border-radius:0;box-shadow:none;
+  contain:layout paint;backface-visibility:hidden;transform:translateZ(0);
+}
+.intro-photo.fly{
+  animation:photoFly 2s cubic-bezier(.16,.72,.24,1) forwards;
+  will-change:transform,opacity;
+}
 @keyframes photoFly{
-  0%{opacity:0; transform:translate(0px,0px) rotate(0deg) scale(.9)}
-  6%{opacity:1}
-  13%{transform:translate(var(--spreadX,0px), var(--spreadY,0px)) rotate(var(--rot,0deg)) scale(1)}
-  84%{transform:translate(var(--spreadX,0px), var(--spreadY,0px)) rotate(var(--rot,0deg)) scale(1); opacity:1}
-  90%{transform:translate(var(--convergeX,0px), var(--convergeY,0px)) rotate(calc(var(--rot,0deg) + 18deg)) scale(1.04)}
-  96%{transform:translate(var(--exitX,0px), var(--exitY,0px)) rotate(calc(var(--rot,0deg) + 36deg)) scale(.94); opacity:.6}
-  100%{transform:translate(var(--exitX,0px), calc(var(--exitY,0px) + 220px)); opacity:0}
+  0%{opacity:0;transform:translate3d(0,0,0) rotate(0deg) scale(.92)}
+  18%{opacity:1;transform:translate3d(var(--spreadX,0px),var(--spreadY,0px),0) rotate(var(--rot,0deg)) scale(1)}
+  82%{opacity:1;transform:translate3d(var(--spreadX,0px),var(--spreadY,0px),0) rotate(var(--rot,0deg)) scale(1)}
+  100%{opacity:0;transform:translate3d(var(--spreadX,0px),calc(var(--spreadY,0px) + 36px),0) rotate(var(--rot,0deg)) scale(.96)}
 }
 .envelope-wrap{
   width:280px; height:240px; margin:18px auto 10px; position:relative; cursor:pointer;
@@ -270,7 +273,7 @@ html:not(.js-ok) .intro-toggle:checked + .intro{
 .envelope-wrap.opened .letter{transform:translateX(-50%) translateY(-46px); opacity:1}
 .envelope-wrap.opened .seal{opacity:0; transform:translate(-50%,-50%) scale(.6)}
 @keyframes sealPulse{50%{box-shadow:0 4px 18px rgba(0,0,0,.35), 0 0 40px rgba(236,190,104,.82)}}
-.intro h1{font-weight:600; letter-spacing:.03em; font-size:clamp(28px,3.4vw,42px); margin:6px 0 12px}
+.intro h1{font-weight:600; letter-spacing:.03em; font-size:clamp(28px,3.4vw,42px); margin:6px 0 12px; overflow-wrap:anywhere}
 .intro p{color:#e2d5be; font-size:17px; line-height:1.9}
 .desktop-easter-egg{
   display:inline-block; position:relative; margin-top:8px;
@@ -435,15 +438,15 @@ section{position:relative; min-height:100vh; padding:110px clamp(18px,6vw,92px);
 
 .piece{
   --piece-size:88px;
-  position:absolute; width:var(--piece-size); height:var(--piece-size);
-  transition:left .7s cubic-bezier(.2,.78,.2,1), top .7s cubic-bezier(.2,.78,.2,1),
-             transform .7s cubic-bezier(.2,.78,.2,1), filter .45s ease;
+  position:absolute; left:0; top:0; width:var(--piece-size); height:var(--piece-size);
+  transition:transform .7s cubic-bezier(.2,.78,.2,1),filter .45s ease;
+  contain:layout paint; will-change:transform;
   cursor:pointer; user-select:none;
 }
 .piece svg{width:100%; height:100%; overflow:visible; display:block}
 .piece .piece-shape{stroke:rgba(255,221,150,.82); stroke-width:2.2}
 .piece .piece-line{fill:none; stroke:rgba(88,56,22,.65); stroke-width:1.1}
-.piece .piece-text{font-size:clamp(7px,calc(var(--piece-size) * .115),10.5px); font-weight:700; letter-spacing:.01em; text-anchor:middle; dominant-baseline:middle; font-family:var(--hand-font); opacity:0; transition:opacity .35s ease}
+.piece .piece-text{font-size:clamp(9px,calc(var(--piece-size) * .15),14px); font-weight:800; letter-spacing:0; text-anchor:middle; dominant-baseline:middle; font-family:var(--hand-font); opacity:0; transition:opacity .35s ease}
 .piece.house-red .piece-shape{fill:url(#fillRed)}
 .piece.house-green .piece-shape{fill:url(#fillGreen)}
 .piece.house-blue .piece-shape{fill:url(#fillBlue)}
@@ -468,7 +471,7 @@ section{position:relative; min-height:100vh; padding:110px clamp(18px,6vw,92px);
   content:""; position:absolute; inset:6px; border-radius:18px;
   box-shadow:0 0 18px rgba(247,209,122,.45); pointer-events:none;
 }
-.piece:hover{transform:scale(1.06) rotate(1deg) !important; z-index:40}
+.piece:hover{filter:brightness(1.08) drop-shadow(0 0 12px rgba(255,224,149,.45)); z-index:40}
 .piece.active{filter:drop-shadow(0 0 16px rgba(255,224,149,.98)) drop-shadow(0 14px 18px rgba(0,0,0,.36)); z-index:50}
 
 .story{
@@ -752,6 +755,7 @@ textarea{min-height:96px; resize:vertical}
 .radio.active{background:rgba(255,248,231,.98); border-color:rgba(125,85,41,.55); box-shadow:0 0 0 2px rgba(241,205,131,.42)}
 .calendar-wrap{
   margin-top:18px; padding:18px; border-radius:14px; background:rgba(255,248,232,.62); border:1px solid rgba(120,83,39,.18); display:none;
+  scroll-margin-top:74px;
 }
 .calendar-wrap.show{display:block; animation:fadeUp .35s ease}
 @keyframes fadeUp{from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:none}}
@@ -780,6 +784,33 @@ textarea{min-height:96px; resize:vertical}
 .summary-box{padding:12px 14px; border-radius:12px; background:rgba(255,252,244,.8); border:1px solid rgba(120,83,39,.16)}
 .summary-box h5{margin:0 0 8px; font-size:18px; color:#6a4b2b}
 .summary-box p{margin:0; font-size:15px; color:#5c4735; line-height:1.7; min-height:40px}
+.meal-period{margin-top:18px}
+.meal-period > span{display:block; margin-bottom:9px; color:#412e1f; font-size:20px}
+.meal-options{display:grid; grid-template-columns:repeat(2,1fr); gap:9px}
+.meal-option{
+  display:flex; align-items:center; justify-content:center; gap:9px;
+  margin:0;
+  padding:13px; border:1px solid rgba(68,47,27,.2); border-radius:9px;
+  background:rgba(255,250,235,.5); color:#4c3828; cursor:pointer;
+  font-size:18px; transform:none;
+}
+.meal-option:hover{background:rgba(255,250,235,.82)}
+.meal-option:has(input:checked){
+  background:rgba(255,248,231,.98); border-color:rgba(125,85,41,.55);
+  box-shadow:0 0 0 2px rgba(241,205,131,.42);
+}
+.meal-option input,
+.meal-option input:focus{
+  appearance:none; -webkit-appearance:none; flex:0 0 18px;
+  width:18px; height:18px; margin:0; padding:0;
+  border:2px solid #8a6844; border-radius:50%;
+  background:#fffaf0; box-shadow:none; outline:none;
+}
+.meal-option input:checked{
+  border-color:#6d2f35;
+  background:radial-gradient(circle,#6d2f35 0 42%,#fffaf0 46%);
+}
+.meal-option:focus-within{outline:2px solid rgba(109,47,53,.24);outline-offset:2px}
 .form-actions{display:flex; justify-content:flex-end; margin-top:22px}
 footer{
   padding:34px 28px; text-align:center; color:#d0bd94; font-size:16px; letter-spacing:.08em;
@@ -829,18 +860,10 @@ footer{
   box-shadow:0 28px 80px rgba(0,0,0,.46),inset 0 0 0 7px rgba(255,249,224,.18),inset 0 0 42px rgba(94,59,24,.09);
   animation:spriteCardIn .34s cubic-bezier(.2,.8,.2,1);
 }
-.sprite-card::before{
-  content:"✦"; display:grid; place-items:center; width:52px; height:52px; margin:0 auto 12px;
-  color:#fff0b2; font-size:25px; border-radius:50%;
-  background:radial-gradient(circle,#d9a94e 0 28%,#8a5a24 72%);
-  border:1px solid rgba(100,62,22,.34);
-  box-shadow:0 0 0 6px rgba(190,139,54,.1),0 0 26px rgba(206,156,68,.42);
-}
 .sprite-card::after{
   content:""; position:absolute; inset:9px; border:1px solid rgba(114,74,32,.16);
   border-radius:15px; pointer-events:none;
 }
-.sprite-title{margin:0 0 10px; color:#6a451f; font-size:27px; letter-spacing:.08em}
 .sprite-message{margin:0 0 22px; color:#4b3828; font-size:18px; line-height:1.8; overflow-wrap:anywhere}
 .sprite-confirm{
   position:relative; z-index:1; min-width:132px; padding:11px 22px; cursor:pointer;
@@ -867,7 +890,7 @@ button,a,.radio,.date-cell,.memory-bottle,.envelope-wrap,.puzzle-stage{
   z-index:8;padding:8px 12px;border-radius:999px;
   border:1px solid rgba(226,191,119,.34);
   background:rgba(9,15,20,.68);color:#ead6a4;
-  font-size:13px;line-height:1.3;white-space:nowrap;
+  font:700 13px/1.3 var(--hand-font);white-space:nowrap;cursor:pointer;
   box-shadow:0 0 16px rgba(221,177,93,.12);
 }
 body.modal-open{overflow:hidden;touch-action:none}
@@ -929,7 +952,7 @@ body.modal-open{overflow:hidden;touch-action:none}
   nav{padding:12px 14px;gap:10px}
   nav .brand{font-size:13px;line-height:1.25;white-space:normal;max-width:62vw}
   nav a{font-size:14px;padding:8px 12px;white-space:nowrap}
-  .hero{min-height:100vh;padding-top:100px;padding-bottom:72px}
+  .hero{min-height:88svh;padding-top:94px;padding-bottom:38px}
   .hero-copy{width:100%;max-width:100%}
   .hero h1{font-size:clamp(38px,10.8vw,68px);line-height:1.1;margin:12px 0 20px}
   .hero-line{max-width:none}
@@ -941,10 +964,10 @@ body.modal-open{overflow:hidden;touch-action:none}
   .section-title{margin-bottom:14px}
   .section-title h2{font-size:clamp(31px,9vw,46px);line-height:1.22}
   .section-title p{font-size:16px;line-height:1.75}
-  .puzzle-section{padding-top:54px;padding-bottom:28px}
+  .puzzle-section{padding-top:28px;padding-bottom:28px}
   .puzzle-stage{min-height:650px;margin-top:10px;border-radius:18px;overflow:hidden}
   .mobile-puzzle-tip{display:block}
-  .piece{will-change:left,top,transform;transition-duration:.52s}
+  .piece{will-change:transform;transition-duration:.52s}
   .piece .status{display:none}
 
   /* 手機改成 2 x 3，方便一次閱讀且不拉太長 */
@@ -989,8 +1012,13 @@ body.modal-open{overflow:hidden;touch-action:none}
   .calendar-wrap{padding:12px}
   .calendar h4{font-size:20px}
   .date-cell{font-size:14px;border-radius:8px}
+  .days,.dates{gap:4px}
+  .date-cell{min-height:38px}
+  .intro-inner{padding:20px 18px}
+  .intro h1{font-size:clamp(25px,7.5vw,34px);line-height:1.38}
 
   .memory-modal{padding:12px}
+  .memory-modal,.qr-modal,.sprite-modal{backdrop-filter:none}
   .memory-card{width:min(94vw,420px);max-height:calc(100dvh - 24px);padding:22px 18px 18px;overflow:auto}
   .memory-card h3{font-size:30px;padding-right:36px}
   .memory-card p{font-size:18px;line-height:1.7}
@@ -1186,6 +1214,7 @@ body.modal-open{overflow:hidden;touch-action:none}
     
   </div>
   <div class="puzzle-stage reveal" id="stage">
+    <button class="mobile-puzzle-tip" id="mobilePuzzleTip" type="button">點擊這裡，讓拼圖聚集</button>
   </div>
 </section>
 
@@ -1206,7 +1235,7 @@ body.modal-open{overflow:hidden;touch-action:none}
     <h2>騎上掃把，<br>再跑一次我們的校園。</h2>
   </div>
   <div class="game-embed-wrap reveal">
-    <iframe class="game-embed-frame" src="campus_broomstick_webapp/index.html" title="校園掃把小遊戲" loading="eager" allow="fullscreen; autoplay"></iframe>
+    <iframe class="game-embed-frame" src="about:blank" data-src="campus_broomstick_webapp/index.html" title="校園掃把小遊戲" loading="lazy" allow="fullscreen; autoplay"></iframe>
   </div>
 </section>
 
@@ -1248,6 +1277,13 @@ body.modal-open{overflow:hidden;touch-action:none}
           <p id="unavailableSummary">尚未選擇</p>
         </div>
       </div>
+      <div class="meal-period">
+        <span>偏好的聚餐時段</span>
+        <div class="meal-options">
+          <label class="meal-option"><input type="radio" name="mealPeriod" value="午餐">午餐</label>
+          <label class="meal-option"><input type="radio" name="mealPeriod" value="晚餐">晚餐</label>
+        </div>
+      </div>
     </div>
 
     <label>有沒有想說的話？</label>
@@ -1259,6 +1295,7 @@ body.modal-open{overflow:hidden;touch-action:none}
       <input type="text" name="entry.1322254940" id="googleNameInput" />
       <input type="text" name="entry.860732180" id="googleIntentInput" />
       <input type="text" name="entry.380408636" id="googleAvailableInput" />
+      <input type="text" name="entry.332417583" id="googleMealInput" />
       <input type="text" name="entry.2031038670" id="googleUnavailableInput" />
       <input type="text" name="entry.1328561279" id="googleNoteInput" />
     </form>
@@ -1293,9 +1330,8 @@ body.modal-open{overflow:hidden;touch-action:none}
   </div>
 </div>
 
-<div class="sprite-modal" id="spriteModal" role="dialog" aria-modal="true" aria-labelledby="spriteTitle" aria-describedby="spriteMessage">
+<div class="sprite-modal" id="spriteModal" role="dialog" aria-modal="true" aria-describedby="spriteMessage">
   <div class="sprite-card">
-    <h3 class="sprite-title" id="spriteTitle">小精靈表示：</h3>
     <p class="sprite-message" id="spriteMessage"></p>
     <button class="sprite-confirm" id="closeSpriteModal">我知道了</button>
   </div>
@@ -1350,6 +1386,11 @@ const spriteMessage=document.getElementById('spriteMessage');
 const closeSpriteModal=document.getElementById('closeSpriteModal');
 let introOpening=false;
 
+const campusGameFrame=document.querySelector('.game-embed-frame');
+if(campusGameFrame && window.innerWidth>720){
+  campusGameFrame.src=campusGameFrame.dataset.src;
+}
+
 function showSpriteMessage(message){
   spriteMessage.textContent=message;
   spriteModal.classList.add('show');
@@ -1389,28 +1430,41 @@ shareInvitationBtn.addEventListener('click',async()=>{
   }
 });
 
-function createFlyingLetters(){
-  // if photo set exists, fly photos; otherwise fall back to small notes
-  const photoFiles = [
-    "3920c648-212f-4de3-9310-a40dca2c459a.webp",
-    "a3e1c1ee-ab8e-46a0-9da4-a59629594efb.webp",
-    "ChatGPT Image 2026年6月11日 下午11_41_26 (1).webp",
-    "ChatGPT Image 2026年6月11日 下午11_41_27 (2).webp",
-    "ChatGPT Image 2026年6月11日 下午11_41_27 (3).webp",
-    "ChatGPT Image 2026年6月11日 下午11_41_27 (4).webp",
-    "ChatGPT Image 2026年6月11日 下午11_41_27 (5).webp",
-    "ChatGPT Image 2026年6月11日 下午11_41_28 (6).webp",
-    "ChatGPT Image 2026年6月11日 下午11_41_28 (7).webp",
-    "ChatGPT Image 2026年6月11日 下午11_41_28 (8).webp"
-  ];
-  const usePhotos = photoFiles && photoFiles.length;
-  const count = usePhotos ? photoFiles.length : (innerWidth <= 760 ? 10 : 18);
+const introPhotoFiles = [
+  "3920c648-212f-4de3-9310-a40dca2c459a.webp",
+  "a3e1c1ee-ab8e-46a0-9da4-a59629594efb.webp",
+  "ChatGPT Image 2026年6月11日 下午11_41_26 (1).webp",
+  "ChatGPT Image 2026年6月11日 下午11_41_27 (2).webp",
+  "ChatGPT Image 2026年6月11日 下午11_41_27 (3).webp",
+  "ChatGPT Image 2026年6月11日 下午11_41_27 (4).webp",
+  "ChatGPT Image 2026年6月11日 下午11_41_27 (5).webp",
+  "ChatGPT Image 2026年6月11日 下午11_41_28 (6).webp",
+  "ChatGPT Image 2026年6月11日 下午11_41_28 (7).webp",
+  "ChatGPT Image 2026年6月11日 下午11_41_28 (8).webp"
+];
+const introPhotoDisplayFiles=window.innerWidth<=720
+  ? introPhotoFiles.filter((_,index)=>index%2===0)
+  : introPhotoFiles;
+const introPhotoNodes=introPhotoDisplayFiles.map((file,index)=>{
+  const image=new Image();
+  image.className='intro-photo';
+  image.decoding='async';
+  image.loading='eager';
+  image.fetchPriority='high';
+  image.alt='';
+  image.dataset.index=index;
+  image.style.setProperty('--rot',`${(Math.random()*28-14).toFixed(1)}deg`);
+  image.style.animationDelay=`${index*20}ms`;
+  image.src=`assets/picofele/${encodeURIComponent(file)}`;
+  introBurst.appendChild(image);
+  if(image.decode) image.decode().catch(()=>{});
+  return image;
+});
+
+function layoutIntroPhotos(){
   const introRect = intro.getBoundingClientRect();
   const envRect = envelope.getBoundingClientRect();
-  let maxDuration = 0;
-  const spreadRadius = Math.min(window.innerWidth, window.innerHeight) * 0.45;
-  const convergeCenterX = Math.round(introRect.width/2);
-  const convergeCenterY = Math.round(introRect.height * 0.62);
+  if(introRect.width<100 || introRect.height<100) return;
   const landscape = introRect.width >= 720;
   const edgeGap = landscape ? 18 : 10;
   const photoSize = landscape
@@ -1431,97 +1485,30 @@ function createFlyingLetters(){
         const y = edgeY+(introRect.height-edgeY*2)*(row/4);
         return [side/introRect.width,y/introRect.height];
       });
-  for(let i=0;i<count;i++){
-    const rotation = Math.random()*28-14;
-    const delayMs = i*45;
-    const rot = `${rotation.toFixed(1)}deg`;
-    const delay = `${delayMs}ms`;
-    if(usePhotos){
-      const img=document.createElement('img');
-      img.className='intro-photo fly';
-      const fn = photoFiles[i % photoFiles.length];
-      img.src = `assets/picofele/${encodeURIComponent(fn)}`;
-      const size = Math.floor(photoSize);
-      img.style.width = `${size}px`;
-      img.style.height = `${size}px`;
-      img.style.borderRadius = '0';
-      img.style.boxShadow = 'none';
-      img.style.background = 'transparent';
-      img.alt = '';
-      // start from envelope center (inside envelope)
-      const startLeft = Math.round(envRect.left - introRect.left + (envRect.width/2) - (size/2));
-      const startTop = Math.round(envRect.top - introRect.top + (envRect.height/2) - (size/2));
-      img.style.left = `${startLeft}px`;
-      img.style.top = `${startTop}px`;
-      const [slotX,slotY] = photoSlots[i%photoSlots.length];
-      const targetLeft = slotX*introRect.width-size/2;
-      const targetTop = slotY*introRect.height-size/2;
-      const spreadX = Math.round(targetLeft-startLeft);
-      const spreadY = Math.round(targetTop-startTop);
-      // compute converge (to center-bottom) offset from start
-      const convergeX = Math.round(convergeCenterX - (size/2) - startLeft);
-      const convergeY = Math.round(convergeCenterY - (size/2) - startTop);
-      // compute exit (downwards offscreen)
-      const exitX = Math.round(convergeX + (Math.random()*2-1) * 120);
-      const exitY = Math.round((window.innerHeight - startTop) + 360);
-      img.style.setProperty('--spreadX', `${spreadX}px`);
-      img.style.setProperty('--spreadY', `${spreadY}px`);
-      img.style.setProperty('--convergeX', `${convergeX}px`);
-      img.style.setProperty('--convergeY', `${convergeY}px`);
-      img.style.setProperty('--exitX', `${exitX}px`);
-      img.style.setProperty('--exitY', `${exitY}px`);
-      img.style.setProperty('--rot', rot);
-      // make sure photo appears above envelope
-      img.style.zIndex = '4001';
-      // About 1.8s spread, 10s hold, then gather and leave.
-      const duration = 14000;
-      const totalDuration = duration+delayMs;
-      if(totalDuration > maxDuration) maxDuration = totalDuration;
-      img.style.animationDuration = `${duration}ms`;
-      img.style.animationDelay = delay;
-      img.style.animationTimingFunction = 'cubic-bezier(.2,.8,.25,1)';
-      introBurst.appendChild(img);
-      setTimeout(()=>img.remove(), totalDuration + 400);
-    } else {
-      const note=document.createElement('span');
-      note.className='intro-note fly';
-      // fallback start near envelope
-      const startLeft = Math.round(envRect.left - introRect.left + (envRect.width/2) - 32);
-      const startTop = Math.round(envRect.top - introRect.top + (envRect.height/2) - 22);
-      note.style.left=`${startLeft}px`;
-      note.style.top=`${startTop}px`;
-      // choose quadrant uniformly for notes as well
-      const quadrantN = Math.floor(Math.random() * 4);
-      const magXN = Math.floor(Math.random() * Math.floor(spreadRadius * 0.9));
-      const magYN = Math.floor(Math.random() * Math.floor(spreadRadius * 0.9) * (0.6 + Math.random() * 0.8));
-      let spreadX = magXN;
-      let spreadY = magYN;
-      if (quadrantN === 0) { spreadX = magXN; spreadY = magYN; }
-      else if (quadrantN === 1) { spreadX = -magXN; spreadY = magYN; }
-      else if (quadrantN === 2) { spreadX = -magXN; spreadY = -magYN; }
-      else { spreadX = magXN; spreadY = -magYN; }
-      const convergeX = Math.round(convergeCenterX - 32 - startLeft);
-      const convergeY = Math.round(convergeCenterY - 22 - startTop);
-      const exitX = Math.round(convergeX + (Math.random()*2-1) * 80);
-      const exitY = Math.round((window.innerHeight - startTop) + 360);
-      note.style.setProperty('--spreadX', `${spreadX}px`);
-      note.style.setProperty('--spreadY', `${spreadY}px`);
-      note.style.setProperty('--convergeX', `${convergeX}px`);
-      note.style.setProperty('--convergeY', `${convergeY}px`);
-      note.style.setProperty('--exitX', `${exitX}px`);
-      note.style.setProperty('--exitY', `${exitY}px`);
-      note.style.setProperty('--rot', `${(Math.random()*140-70).toFixed(1)}deg`);
-      note.style.animationDelay=delay;
-      note.style.zIndex='3100';
-      // slower fixed duration for notes, scaled 1.3x
-      const duration = Math.floor(7200 * 1.3);
-      if(duration > maxDuration) maxDuration = duration;
-      note.style.animationDuration = `${duration}ms`;
-      introBurst.appendChild(note);
-      setTimeout(()=>note.remove(),duration + 400);
-    }
-  }
-  return maxDuration;
+  introPhotoNodes.forEach((image,index)=>{
+    const size=Math.floor(photoSize);
+    const startLeft=Math.round(envRect.left-introRect.left+envRect.width/2-size/2);
+    const startTop=Math.round(envRect.top-introRect.top+envRect.height/2-size/2);
+    const [slotX,slotY]=photoSlots[index%photoSlots.length];
+    image.style.width=`${size}px`;
+    image.style.height=`${size}px`;
+    image.style.left=`${startLeft}px`;
+    image.style.top=`${startTop}px`;
+    image.style.setProperty('--spreadX',`${Math.round(slotX*introRect.width-size/2-startLeft)}px`);
+    image.style.setProperty('--spreadY',`${Math.round(slotY*introRect.height-size/2-startTop)}px`);
+  });
+}
+layoutIntroPhotos();
+let introPhotoResizeTimer=0;
+window.addEventListener('resize',()=>{
+  if(introOpening) return;
+  clearTimeout(introPhotoResizeTimer);
+  introPhotoResizeTimer=setTimeout(layoutIntroPhotos,160);
+},{passive:true});
+
+function createFlyingLetters(){
+  introPhotoNodes.forEach(image=>image.classList.add('fly'));
+  return 2180;
 }
 function openIntroEnvelope(){
   if(introOpening) return;
@@ -1530,7 +1517,7 @@ function openIntroEnvelope(){
   envelope.classList.add('opened');
   const max = createFlyingLetters();
   // keep intro visible long enough for the photos to finish flying
-  const hideDelay = (max && !isNaN(max)) ? (max + 2000) : 16000;
+  const hideDelay = (max && !isNaN(max)) ? (max + 100) : 2300;
   setTimeout(()=>{ intro.classList.add('hidden'); introOpening=false; }, hideDelay);
 }
 if(introToggle){
@@ -1685,6 +1672,7 @@ function buildPieces(){
 function layoutPieces(assembled){
   const rect=stage.getBoundingClientRect();
   const stageW=rect.width, stageH=rect.height;
+  if(stageW<100 || stageH<100 || !Number.isFinite(stageW) || !Number.isFinite(stageH)) return;
   const cols=window.innerWidth<=420?4:(window.innerWidth<=720?5:6);
   const rows=Math.ceil(names.length/cols);
   const overlap=window.innerWidth<=420?6:(window.innerWidth<=720?8:10);
@@ -1709,9 +1697,11 @@ function layoutPieces(assembled){
     obj.target=[targetX,targetY];
     obj.el.style.transitionDelay=assembled?`${i*20}ms`:`${(pieces.length-i)*8}ms`;
     obj.el.style.setProperty('--piece-size',`${pieceW}px`);
-    obj.el.style.left=(assembled?targetX:scatterX)+'px';
-    obj.el.style.top=(assembled?targetY:scatterY)+'px';
-    obj.el.style.transform=assembled?'rotate(0deg) scale(1.08)':'rotate(0deg) scale(.94)';
+    const x=assembled?targetX:scatterX;
+    const y=assembled?targetY:scatterY;
+    obj.el.style.transform=assembled
+      ? `translate3d(${x}px,${y}px,0) rotate(0deg) scale(1.08)`
+      : `translate3d(${x}px,${y}px,0) rotate(0deg) scale(.94)`;
     obj.el.classList.toggle('assembled',assembled);
   });
 }
@@ -1721,24 +1711,39 @@ let assembledState=false;
 function assemblePieces(){if(assembledState)return;assembledState=true;layoutPieces(true);}
 function scatterPieces(){if(!assembledState)return;assembledState=false;layoutPieces(false);}
 const coarsePointer=matchMedia('(pointer:coarse)').matches || 'ontouchstart' in window;
-if(coarsePointer){
-  stage.addEventListener('pointerup',()=>{assembledState=!assembledState;layoutPieces(assembledState);});
-  if('IntersectionObserver' in window){
-    const puzzleObserver=new IntersectionObserver(entries=>{
-      entries.forEach(entry=>{
-        if(entry.isIntersecting && entry.intersectionRatio>.28 && !assembledState){
-          assembledState=true;layoutPieces(true);
-        }
-      });
-    },{threshold:[.28,.55]});
-    puzzleObserver.observe(stage);
-  }
-}else{
+const mobilePuzzleTip=document.getElementById('mobilePuzzleTip');
+function updatePuzzleTip(){
+  if(!mobilePuzzleTip) return;
+  mobilePuzzleTip.textContent=assembledState?'點擊這裡，讓拼圖散開':'點擊這裡，讓拼圖聚集';
+}
+mobilePuzzleTip.addEventListener('click',event=>{
+  event.stopPropagation();
+  assembledState=!assembledState;
+  layoutPieces(assembledState);
+  updatePuzzleTip();
+});
+if(!coarsePointer){
   stage.addEventListener('mouseenter',assemblePieces);
   stage.addEventListener('mousemove',assemblePieces);
   stage.addEventListener('mouseleave',scatterPieces);
 }
-window.addEventListener('resize',()=>layoutPieces(assembledState));
+if('IntersectionObserver' in window){
+  const puzzleExitObserver=new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+      if(!entry.isIntersecting || entry.intersectionRatio<.12){
+        scatterPieces();
+        updatePuzzleTip();
+      }
+    });
+  },{threshold:[0,.12,.35]});
+  puzzleExitObserver.observe(stage);
+}
+updatePuzzleTip();
+let puzzleResizeTimer=0;
+window.addEventListener('resize',()=>{
+  clearTimeout(puzzleResizeTimer);
+  puzzleResizeTimer=setTimeout(()=>layoutPieces(assembledState),180);
+},{passive:true});
 
 const storyMapZone=document.getElementById('storyMapZone');
 const storyFootprints=document.getElementById('storyFootprints');
@@ -1886,34 +1891,42 @@ function refreshCalendarStates(){
   document.getElementById('availableSummary').textContent = availableSet.size ? [...availableSet].sort().join('、') : '尚未選擇';
   document.getElementById('unavailableSummary').textContent = unavailableSet.size ? [...unavailableSet].sort().join('、') : '尚未選擇';
 }
-const now=new Date();
-let y=now.getFullYear(), m=now.getMonth();
-calendarsEl.appendChild(renderMonth(y,m));
-calendarsEl.appendChild(renderMonth(m===11?y+1:y, m===11?0:m+1));
+const calendarYear=new Date().getFullYear();
+calendarsEl.appendChild(renderMonth(calendarYear,6));
+calendarsEl.appendChild(renderMonth(calendarYear,7));
 refreshCalendarStates();
 
 const qrModal=document.getElementById('qrModal');
 function openQrModal(){qrModal.classList.add('show');document.body.classList.add('modal-open');}
 function closeQrModal(){qrModal.classList.remove('show');document.body.classList.remove('modal-open');}
-document.getElementById('finishBtn').addEventListener('pointerup',()=>{
+let formSubmitting=false;
+document.getElementById('finishBtn').addEventListener('click',()=>{
+  if(formSubmitting) return;
+  formSubmitting=true;
   const activeIntent = document.querySelector('#intentGrid .radio.active');
   const intentText = activeIntent ? activeIntent.textContent.trim() : '';
   const available = [...availableSet].sort().join('、');
   const unavailable = [...unavailableSet].sort().join('、');
+  const mealPeriod = document.querySelector('input[name="mealPeriod"]:checked')?.value || '';
   document.getElementById('googleNameInput').value = document.getElementById('nameInput').value.trim();
   document.getElementById('googleIntentInput').value = intentText;
   document.getElementById('googleAvailableInput').value = available;
+  document.getElementById('googleMealInput').value = mealPeriod;
   document.getElementById('googleUnavailableInput').value = unavailable;
   document.getElementById('googleNoteInput').value = document.getElementById('noteInput').value.trim();
-  document.getElementById('googleFormSubmit').submit();
   openQrModal();
+  setTimeout(()=>{
+    document.getElementById('googleFormSubmit').submit();
+    formSubmitting=false;
+  },80);
 });
-document.getElementById('closeQr').addEventListener('pointerup',closeQrModal);
-document.getElementById('closeQrBtn').addEventListener('pointerup',closeQrModal);
-qrModal.addEventListener('pointerup',e=>{ if(e.target===qrModal) closeQrModal(); });
+document.getElementById('closeQr').addEventListener('click',closeQrModal);
+document.getElementById('closeQrBtn').addEventListener('click',closeQrModal);
+qrModal.addEventListener('click',e=>{ if(e.target===qrModal) closeQrModal(); });
 
 function drawQrPlaceholder(){
   const canvas=document.getElementById('qrCanvas');
+  if(!canvas) return;
   const ctx=canvas.getContext('2d');
   const size=29;
   const cell=canvas.width/size;
@@ -1947,7 +1960,6 @@ function drawQrPlaceholder(){
   }
 }
 
-const campusGameFrame=document.querySelector('.game-embed-frame');
 let campusWheelDelta=0;
 let campusWheelFrame=0;
 window.addEventListener('message',event=>{
